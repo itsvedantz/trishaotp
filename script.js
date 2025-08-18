@@ -1,97 +1,103 @@
 // Replace with your Firebase project's configuration
 const firebaseConfig = {
-  apiKey: 'AIzaSyAXC10Z6hsCmH7MknRtAwnjzXsoSecpEyE',
-  authDomain: 'handwriter-e701a.firebaseapp.com',
-  projectId: 'handwriter-e701a',
-  storageBucket: 'handwriter-e701a.firebasestorage.app',
-  messagingSenderId: '132314462200',
-  appId: '1:132314462200:web:b6a4cf66ba3ff04f8cc80d'
+  apiKey: "AIzaSyAXC10Z6hsCmH7MknRtAwnjzXsoSecpEyE",
+  authDomain: "handwriter-e701a.firebaseapp.com",
+  projectId: "handwriter-e701a",
+  storageBucket: "handwriter-e701a.firebasestorage.app",
+  messagingSenderId: "132314462200",
+  appId: "1:132314462200:web:120c9ad8d30609448cc80d",
+  measurementId: "G-QXG028RL6R"
 };
-
-// --- END OF CONFIG ---
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 
-// Get DOM Elements
-const loginForm = document.getElementById('login-form');
-const emailInput = document.getElementById('email');
-const sendLinkBtn = document.getElementById('send-link-btn');
-const messageDiv = document.getElementById('message');
+// DOM Elements
+const phoneNumberInput = document.getElementById('phone-number');
+const sendOtpBtn = document.getElementById('send-otp-btn');
+const otpInput = document.getElementById('otp-input');
+const verifyOtpBtn = document.getElementById('verify-otp-btn');
+const otpGroup = document.querySelector('.otp-group');
+const statusMessage = document.getElementById('status-message');
 
-// Function to display messages
-const showMessage = (message, type) => {
-    messageDiv.textContent = message;
-    messageDiv.className = type; // 'success' or 'error'
-};
+// Set up reCAPTCHA verifier
+window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+    'size': 'invisible',
+    'callback': (response) => {
+        // reCAPTCHA solved, allow sendOtp to continue.
+        console.log("reCAPTCHA solved");
+    }
+});
 
-// 1. Handle Sending the Login Link
-loginForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const email = emailInput.value.trim();
-    if (!email) {
-        showMessage('Please enter an email address.', 'error');
+// --- Send OTP Function ---
+const sendOtp = () => {
+    const phoneNumber = "+91" + phoneNumberInput.value;
+    const appVerifier = window.recaptchaVerifier;
+
+    if (phoneNumber.length !== 13) {
+        updateStatus("Please enter a valid 10-digit number.", "error");
         return;
     }
 
-    // Disable button to prevent multiple clicks
-    sendLinkBtn.disabled = true;
-    sendLinkBtn.textContent = 'Sending...';
+    sendOtpBtn.disabled = true;
+    sendOtpBtn.textContent = "Sending...";
+    updateStatus("Sending OTP...", "info");
 
-    const actionCodeSettings = {
-        // URL you want to redirect back to. The domain must be whitelisted
-        // in the Firebase Console.
-        url: window.location.href, // Redirect back to this same page
-        handleCodeInApp: true,
-    };
-
-    auth.sendSignInLinkToEmail(email, actionCodeSettings)
-        .then(() => {
-            // The link was successfully sent.
-            window.localStorage.setItem('emailForSignIn', email);
-            showMessage(`A login link has been sent to ${email}. Please check your inbox.`, 'success');
-            loginForm.style.display = 'none'; // Hide the form
-        })
-        .catch((error) => {
-            console.error("Firebase Error:", error.code, error.message);
-            showMessage(`Error: ${error.message}`, 'error');
-            sendLinkBtn.disabled = false;
-            sendLinkBtn.textContent = 'Send Login Link';
-        });
-});
-
-// 2. Handle Login when user clicks the link and returns to the page
-document.addEventListener('DOMContentLoaded', () => {
-    if (auth.isSignInWithEmailLink(window.location.href)) {
-        let email = window.localStorage.getItem('emailForSignIn');
-        if (!email) {
-            // User opened the link on a different device. Ask for email.
-            email = window.prompt('Please provide your email for confirmation');
-        }
-        
-        if (!email) {
-            showMessage('Email is required to complete sign-in.', 'error');
-            return;
-        }
-
-        auth.signInWithEmailLink(email, window.location.href)
-            .then((result) => {
-                window.localStorage.removeItem('emailForSignIn');
-                
-                console.log("Successfully signed in!", result.user);
-                
-                // TODO: Redirect to the user's dashboard page
-                showMessage('Login successful! Redirecting...', 'success');
-                setTimeout(() => {
-                   // window.location.href = '/dashboard.html'; 
-                   alert("Redirecting to dashboard!");
-                }, 2000);
-
-            })
-            .catch((error) => {
-                console.error("Firebase Sign-In Error:", error.code, error.message);
-                showMessage(`Error signing in: ${error.message}`, 'error');
+    auth.signInWithPhoneNumber(phoneNumber, appVerifier)
+        .then((confirmationResult) => {
+            window.confirmationResult = confirmationResult;
+            updateStatus("OTP sent successfully!", "success");
+            // Show OTP section
+            otpGroup.style.display = 'flex';
+            verifyOtpBtn.style.display = 'block';
+            sendOtpBtn.style.display = 'none';
+        }).catch((error) => {
+            console.error("Error during OTP sending:", error);
+            updateStatus("Failed to send OTP. Please try again.", "error");
+            recaptchaVerifier.render().then(function(widgetId) {
+                grecaptcha.reset(widgetId);
             });
+            sendOtpBtn.disabled = false;
+            sendOtpBtn.textContent = "Send OTP";
+        });
+};
+
+// --- Verify OTP Function ---
+const verifyOtp = () => {
+    const code = otpInput.value;
+    if (code.length !== 6) {
+        updateStatus("Please enter a valid 6-digit OTP.", "error");
+        return;
     }
-});
+
+    verifyOtpBtn.disabled = true;
+    verifyOtpBtn.textContent = "Verifying...";
+    updateStatus("Verifying OTP...", "info");
+
+    window.confirmationResult.confirm(code).then((result) => {
+        // User signed in successfully.
+        const user = result.user;
+        console.log("User signed in:", user);
+        updateStatus("Login Successful!", "success");
+        // Redirect to the dashboard or home page
+        window.location.href = "/dashboard.html"; // <-- CHANGE TO YOUR DASHBOARD PAGE
+    }).catch((error) => {
+        // User couldn't sign in (bad verification code?)
+        console.error("Error during OTP verification:", error);
+        updateStatus("Invalid OTP. Please try again.", "error");
+        verifyOtpBtn.disabled = false;
+        verifyOtpBtn.textContent = "Verify & Login";
+    });
+};
+
+// --- Helper function to update status message ---
+const updateStatus = (message, type) => {
+    statusMessage.textContent = message;
+    statusMessage.style.color = type === 'success' ? 'var(--success-color)' : (type === 'error' ? 'var(--error-color)' : 'var(--text-color)');
+};
+
+
+// --- Event Listeners ---
+sendOtpBtn.addEventListener('click', sendOtp);
+verifyOtpBtn.addEventListener('click', verifyOtp);
