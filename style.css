@@ -1,13 +1,12 @@
-/* General Styling */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
 :root {
-    --primary-color: #007bff;
-    --primary-hover: #0056b3;
-    --background-color: #f4f7fc;
-    --card-background: #ffffff;
-    --text-color: #333;
-    --input-border: #ced4da;
-    --success-color: #28a745;
-    --error-color: #dc3545;
+    --primary-color: #4A90E2; /* A modern blue */
+    --success-color: #50E3C2; /* A teal-like green */
+    --error-color: #D0021B; /* A strong red */
+    --light-gray: #f4f7f6;
+    --dark-gray: #333;
+    --text-color: #555;
 }
 
 * {
@@ -18,8 +17,7 @@
 
 body {
     font-family: 'Poppins', sans-serif;
-    background-color: var(--background-color);
-    background-image: url('https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?q=80&w=1887&auto=format&fit=crop');
+    background-image: url('https://images.unsplash.com/photo-1580587771525-78b9dba3b914?q=80&w=1974&auto=format&fit=crop'); /* Modern house background */
     background-size: cover;
     background-position: center;
     display: flex;
@@ -29,104 +27,120 @@ body {
     color: var(--text-color);
 }
 
-/* Login Container */
 .login-container {
-    background: var(--card-background);
-    padding: 2.5rem 3rem;
+    padding: 20px;
+}
+
+.login-card {
+    background-color: rgba(255, 255, 255, 0.95);
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     width: 100%;
-    max-width: 450px;
-    text-align: center;
+    max-width: 400px;
+    overflow: hidden;
     backdrop-filter: blur(10px);
-    background-color: rgba(255, 255, 255, 0.85);
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.logo {
-    font-size: 2rem;
+.card-header {
+    text-align: center;
+    padding: 30px;
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.card-header .icon {
+    font-size: 48px;
+    margin-bottom: 15px;
+}
+
+.card-header h2 {
     font-weight: 600;
-    margin-bottom: 0.5rem;
-    color: var(--primary-color);
+    margin-bottom: 5px;
 }
 
-.login-container h2 {
-    margin-bottom: 1rem;
-    font-weight: 500;
-    color: #555;
+.card-header p {
+    font-weight: 300;
+    font-size: 14px;
 }
 
-/* Form Elements */
+.card-body {
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
 .input-group {
-    margin-bottom: 1.5rem;
-    text-align: left;
+    position: relative;
+    display: flex;
+    align-items: center;
 }
 
-.input-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-    font-size: 0.9rem;
+.input-group i {
+    position: absolute;
+    left: 15px;
+    color: #aaa;
+    font-size: 16px;
 }
 
 .input-group input {
     width: 100%;
-    padding: 0.75rem 1rem;
-    border: 1px solid var(--input-border);
+    padding: 12px 12px 12px 45px;
+    border: 1px solid #ddd;
     border-radius: 8px;
-    font-size: 1rem;
     font-family: 'Poppins', sans-serif;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    font-size: 16px;
+    transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 .input-group input:focus {
     outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
 }
 
-/* Button */
-.login-btn {
-    width: 100%;
-    padding: 0.85rem;
-    border: none;
-    border-radius: 8px;
+button {
     background-color: var(--primary-color);
     color: white;
-    font-size: 1rem;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition: background-color 0.3s, transform 0.2s;
 }
 
-.login-btn:hover {
-    background-color: var(--primary-hover);
+button:hover {
+    background-color: #357ABD;
     transform: translateY(-2px);
 }
 
-.login-btn:disabled {
-    background-color: #a0c9f7;
-    cursor: not-allowed;
+#verify-otp-btn {
+    background-color: var(--success-color);
 }
 
-/* Message Display */
-#message {
-    margin-top: 1.5rem;
-    font-size: 0.9rem;
-    font-weight: 500;
-    padding: 0.75rem;
-    border-radius: 8px;
+#verify-otp-btn:hover {
+    background-color: #45b9a2;
+}
+
+#status-message {
+    text-align: center;
+    font-size: 14px;
+    font-weight: 400;
+    min-height: 20px;
+}
+
+.otp-group {
     display: none; /* Hidden by default */
 }
 
-#message.success {
-    background-color: #d4edda;
-    color: #155724;
-    display: block;
-}
-
-#message.error {
-    background-color: #f8d7da;
-    color: #721c24;
-    display: block;
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    .login-card {
+        border-radius: 0;
+        min-height: 100vh;
+    }
 }
