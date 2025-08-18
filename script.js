@@ -1,12 +1,12 @@
 // Replace with your Firebase project's configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyAXC10Z6hsCmH7MknRtAwnjzXsoSecpEyE",
-  authDomain: "handwriter-e701a.firebaseapp.com",
-  projectId: "handwriter-e701a",
-  storageBucket: "handwriter-e701a.firebasestorage.app",
-  messagingSenderId: "132314462200",
-  appId: "1:132314462200:web:120c9ad8d30609448cc80d",
-  measurementId: "G-QXG028RL6R"
+  apiKey: "AIzaSyASu68tWy_iKi-pUCl7tMFt4QaTVcXdcVM",
+  authDomain: "trishaotp-5b919.firebaseapp.com",
+  projectId: "trishaotp-5b919",
+  storageBucket: "trishaotp-5b919.firebasestorage.app",
+  messagingSenderId: "120386199395",
+  appId: "1:120386199395:web:814a4975d6db9b8a42bd56",
+  measurementId: "G-L97N94LMMP"
 };
 
 // Initialize Firebase
