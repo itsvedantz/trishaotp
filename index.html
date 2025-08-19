@@ -12,22 +12,54 @@
         <div class="login-card">
             <div class="card-header">
                 <i class="fas fa-building-user icon"></i>
-                <h2>Society Hub Login</h2>
-                <p>Welcome back! Please enter your mobile number.</p>
+                <h2 id="login-title">Owner Login</h2>
+                <p id="login-subtitle">Please enter your mobile number.</p>
             </div>
             <div class="card-body">
-                <div id="recaptcha-container"></div>
-                <div class="input-group">
-                    <i class="fas fa-mobile-alt"></i>
-                    <input type="tel" id="phone-number" placeholder="Enter 10-digit mobile number" maxlength="10">
+                <div class="login-tabs">
+                    <button class="tab-btn active" data-role="owner">Owner</button>
+                    <button class="tab-btn" data-role="admin">Admin</button>
+                    <button class="tab-btn" data-role="security">Security</button>
                 </div>
-                <button id="send-otp-btn">Send OTP</button>
 
-                <div class="input-group otp-group" style="display: none;">
-                    <i class="fas fa-key"></i>
-                    <input type="text" id="otp-input" placeholder="Enter 6-digit OTP" maxlength="6">
+                <div id="owner-panel" class="tab-panel active">
+                    <div id="recaptcha-container"></div>
+                    <div class="input-group">
+                        <i class="fas fa-mobile-alt"></i>
+                        <input type="tel" id="phone-number" placeholder="Enter 10-digit mobile number" maxlength="10">
+                    </div>
+                    <button id="send-otp-btn">Send OTP</button>
+
+                    <div class="input-group" id="otp-group" style="display: none;">
+                        <i class="fas fa-key"></i>
+                        <input type="text" id="otp-input" placeholder="Enter 6-digit OTP" maxlength="6">
+                    </div>
+                    <button id="verify-otp-btn" style="display: none;">Verify & Login</button>
                 </div>
-                <button id="verify-otp-btn" style="display: none;">Verify & Login</button>
+
+                <div id="admin-panel" class="tab-panel">
+                    <div class="input-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="admin-email" placeholder="Admin Email">
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="admin-password" placeholder="Password">
+                    </div>
+                    <button id="admin-login-btn" class="btn-secondary">Login as Admin</button>
+                </div>
+
+                <div id="security-panel" class="tab-panel">
+                    <div class="input-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="security-email" placeholder="Security Email">
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="security-password" placeholder="Password">
+                    </div>
+                    <button id="security-login-btn" class="btn-secondary">Login as Security</button>
+                </div>
 
                 <p id="status-message"></p>
             </div>
